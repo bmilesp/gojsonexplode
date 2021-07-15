@@ -60,7 +60,12 @@ func explodeList(l []interface{}, parent string, delimiter string) (map[string]i
 
 func explodeMap(m map[string]interface{}, parent string, delimiter string) (map[string]interface{}, error) {
 	var err error
+	var key string
 	j := make(map[string]interface{})
+	if len(m) == 0 {
+		key = parent
+		j[key] = nil
+	}
 	for k, i := range m {
 		if len(parent) > 0 {
 			k = parent + delimiter + k

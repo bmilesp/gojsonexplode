@@ -15,10 +15,19 @@ func TestTrue(t *testing.T) {
 }
 
 func TestNull(t *testing.T) {
+
 	input := `[null]`
 	output := `{"0":null}`
 
 	out, _ := Explodejsonstr(input, ".")
+	if out != output {
+		t.Error("got", out)
+	}
+
+	input = `{"a":{"b":{}}}`
+	output = `{"a.b":null}`
+
+	out, _ = Explodejsonstr(input, ".")
 	if out != output {
 		t.Error("got", out)
 	}
@@ -28,6 +37,13 @@ func TestNesting(t *testing.T) {
 	input := `{"person":{"name":"Joe", "address":{"street":"123 Main St."}}}`
 	output := `{"person.address.street":"123 Main St.","person.name":"Joe"}`
 	out, _ := Explodejsonstr(input, ".")
+	if out != output {
+		t.Error("got", out)
+	}
+
+	input = `{"person":{"name":"Joe", "address":{"street":{}}}}`
+	output = `{"person.address.street":{},"person.name":"Joe"}`
+	out, _ = Explodejsonstr(input, ".")
 	if out != output {
 		t.Error("got", out)
 	}
